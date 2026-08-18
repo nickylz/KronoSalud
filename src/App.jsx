@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+
+// Importación de componentes estructurales
 import Navbar from './paginas/Navbar';
+
+// Importación de páginas principales
 import Inicio from './paginas/inicio';
 import MiSalud from './paginas/miSalud';
 import Orientacion from './paginas/orientacion';
@@ -12,9 +17,9 @@ import Ejercicio from './paginas/detalle/ejercicio';
 import Nutricion from './paginas/detalle/nutricion';
 import Em from './paginas/detalle/em';
 
-function App() {
-  const [paginaActual, setPaginaActual] = useState('/');
+import './App.css';
 
+function App() {
   const navConfig = {
     items: [
       { text: "Inicio", link: "/" },
@@ -27,73 +32,32 @@ function App() {
     ]
   };
 
-  const manejarNavegacion = (linkRuta) => {
-    setPaginaActual(linkRuta);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const manejarSeccionDetalle = (seccion) => {
-    const rutasDetalle = {
-      salud: '/detalle/salud',
-      ejercicio: '/detalle/ejercicio',
-      nutricion: '/detalle/nutricion',
-      em: '/detalle/em'
-    };
-
-    manejarNavegacion(rutasDetalle[seccion] || '/mi-salud');
-  };
-
   return (
-    <div className="min-h-screen bg-slate-50 pb-12">
-      <Navbar 
-        items={navConfig.items}
-        onSeleccionarBoton={manejarNavegacion} 
-        onIrMinijuego={() => manejarNavegacion('/juegos')} 
-        onIrInicio={() => manejarNavegacion('/')} 
-      />
+    <HashRouter>
+      <div className="min-h-screen bg-slate-50 pb-12">
+        {/* Navbar siempre visible arriba */}
+        <Navbar 
+          items={navConfig.items}
+        />
 
-      <main className="mt-6">
-        {paginaActual === '/' && (
-          <Inicio 
-            onSeleccionarBoton={manejarNavegacion} 
-            onIrMinijuego={() => manejarNavegacion('/juegos')} 
-          />
-        )}
+        <main className="mt-6">
+          <Routes>
+            {/* Rutas Principales */}
+            <Route path="/" element={<Inicio />} />
+            <Route path="/mi-salud" element={<MiSalud />} />
+            <Route path="/orientacion" element={<Orientacion />} />
+            <Route path="/autochequeo" element={<Autochequeo />} />
+            <Route path="/juegos" element={<Minijuego />} />
 
-        {paginaActual === '/mi-salud' && (
-          <MiSalud 
-            onIrOrientacion={() => manejarNavegacion('/orientacion')} 
-            onNavegarSeccion={manejarSeccionDetalle} 
-          />
-        )}
-
-        {paginaActual === '/orientacion' && (
-          <Orientacion onIrAutochequeo={() => setPaginaActual('/autochequeo')} />
-        )}
-
-        {paginaActual === '/autochequeo' && (
-          <Autochequeo onVolverOrientacion={() => setPaginaActual('/orientacion')} />
-        )}
-
-        {paginaActual === '/juegos' && (
-          <Minijuego onVolverMenu={() => manejarNavegacion('/')} />
-        )}
-
-        {/* Vistas de la carpeta detalle */}
-        {paginaActual === '/detalle/salud' && (
-          <Salud onVolver={() => manejarNavegacion('/mi-salud')} />
-        )}
-        {paginaActual === '/detalle/ejercicio' && (
-          <Ejercicio onVolver={() => manejarNavegacion('/mi-salud')} />
-        )}
-        {paginaActual === '/detalle/nutricion' && (
-          <Nutricion onVolver={() => manejarNavegacion('/mi-salud')} />
-        )}
-        {paginaActual === '/detalle/em' && (
-          <Em onVolver={() => manejarNavegacion('/mi-salud')} />
-        )}
-      </main>
-    </div>
+            {/* Vistas de la carpeta detalle */}
+            <Route path="/detalle/salud" element={<Salud />} />
+            <Route path="/detalle/ejercicio" element={<Ejercicio />} />
+            <Route path="/detalle/nutricion" element={<Nutricion />} />
+            <Route path="/detalle/em" element={<Em />} />
+          </Routes>
+        </main>
+      </div>
+    </HashRouter>
   );
 }
 

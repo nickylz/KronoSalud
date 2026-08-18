@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { Menu as MenuIcon, X, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Navbar({ items, onSeleccionarBoton, onIrMinijuego, onIrInicio }) {
+export default function Navbar({ items }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const navigate = useNavigate();
+
+  const manejarClickLink = (link) => {
+    navigate(link);
+    setMenuAbierto(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <header className="w-full bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
@@ -10,11 +18,11 @@ export default function Navbar({ items, onSeleccionarBoton, onIrMinijuego, onIrI
         <div className="flex items-center justify-between h-20">
           
           {/* Logo / Marca */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={onIrInicio}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => manejarClickLink('/')}>
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-teal-500 flex items-center justify-center shadow-md shadow-blue-500/20">
               <Sparkles className="text-white w-5 h-5" />
             </div>
-            <span className="text-slate-800 font-extrabold text-2xl tracking-tight">Calma Mia</span>
+            <span className="text-slate-800 font-extrabold text-2xl tracking-tight">KronoSalud</span>
           </div>
 
           {/* Menú Desktop (Estilo pestañas limpias) */}
@@ -22,7 +30,7 @@ export default function Navbar({ items, onSeleccionarBoton, onIrMinijuego, onIrI
             {items.map((item, index) => (
               <button
                 key={index}
-                onClick={() => onSeleccionarBoton(item.link)}
+                onClick={() => manejarClickLink(item.link)}
                 className="px-4 py-2 rounded-xl text-xs xl:text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-white/60 transition-all cursor-pointer"
               >
                 {item.text}
@@ -33,7 +41,7 @@ export default function Navbar({ items, onSeleccionarBoton, onIrMinijuego, onIrI
           {/* Botón Menú Móvil */}
           <div className="lg:hidden flex items-center">
             <button 
-              className="text-slate-700 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors" 
+              className="text-slate-700 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer" 
               onClick={() => setMenuAbierto(!menuAbierto)}
             >
               {menuAbierto ? <X size={22} /> : <MenuIcon size={22} />}
@@ -48,8 +56,8 @@ export default function Navbar({ items, onSeleccionarBoton, onIrMinijuego, onIrI
           {items.map((item, index) => (
             <button
               key={index}
-              onClick={() => { onSeleccionarBoton(item.link); setMenuAbierto(false); }}
-              className="block w-full text-left font-bold text-slate-700 hover:text-blue-600 hover:bg-slate-50 py-3 px-4 rounded-xl transition-all"
+              onClick={() => manejarClickLink(item.link)}
+              className="block w-full text-left font-bold text-slate-700 hover:text-blue-600 hover:bg-slate-50 py-3 px-4 rounded-xl transition-all cursor-pointer"
             >
               {item.text}
             </button>
